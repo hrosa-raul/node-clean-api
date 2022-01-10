@@ -1,2 +1,10 @@
-import app from './config/app'
-app.listen(5050, () => console.log('Server is online'))
+import { MongoHelper } from '../infra/db/mongodb/helpers/mongo-helpers'
+
+import env from './config/env'
+
+MongoHelper.connect(env.mongoUrl)
+  .then(async () => {
+    const app = (await import('./config/app')).default
+    app.listen(env.port, () => console.log('Server is online'))
+  })
+  .catch(console.error)
